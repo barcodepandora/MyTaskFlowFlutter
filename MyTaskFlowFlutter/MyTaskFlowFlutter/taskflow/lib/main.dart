@@ -8,16 +8,17 @@ void main() {
   runApp(const ProviderScope(child: TaskFlowApp()));
 }
 
-class TaskFlowApp extends StatelessWidget {
+class TaskFlowApp extends ConsumerWidget {
   const TaskFlowApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
     return MaterialApp.router(
       title: 'TaskFlow',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      routerConfig: appRouter,
+      routerConfig: router,
     );
   }
 }
