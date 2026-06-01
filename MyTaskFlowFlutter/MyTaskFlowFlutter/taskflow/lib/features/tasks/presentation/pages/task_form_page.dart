@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:taskflow/core/widgets/loading_overlay.dart';
 import 'package:taskflow/features/tasks/data/providers/tasks_providers.dart';
 import 'package:taskflow/features/tasks/domain/entities/task_entity.dart';
 import 'package:taskflow/features/tasks/domain/entities/task_priority.dart';
+import 'package:taskflow/features/tasks/presentation/controllers/tasks_state.dart';
 
 const _categories = ['Personal', 'Trabajo', 'Estudio', 'Salud', 'Otro'];
 
@@ -92,12 +94,17 @@ class _TaskFormPageState extends ConsumerState<TaskFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final tasksState = ref.watch(tasksNotifierProvider);
+    final isLoading = tasksState is TasksLoading;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? 'Editar tarea' : 'Nueva tarea'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+      body: LoadingOverlay(
+        isLoading: isLoading,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
@@ -188,6 +195,7 @@ class _TaskFormPageState extends ConsumerState<TaskFormPage> {
           ),
         ),
       ),
+    ),
     );
   }
 }

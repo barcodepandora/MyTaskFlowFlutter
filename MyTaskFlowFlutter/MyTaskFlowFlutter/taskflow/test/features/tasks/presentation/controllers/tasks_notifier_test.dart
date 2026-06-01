@@ -69,7 +69,7 @@ void main() {
           .thenAnswer((_) async => const Left(StorageFailure('db error')));
       await notifier.loadTasks();
       expect(notifier.state, isA<TasksError>());
-      expect((notifier.state as TasksError).message, 'db error');
+      expect((notifier.state as TasksError).message, 'Error de almacenamiento.');
     });
   });
 

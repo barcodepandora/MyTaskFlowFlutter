@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:taskflow/features/auth/data/datasources/local_auth_datasource.dart';
+import 'package:taskflow/features/auth/data/providers/auth_providers.dart';
+import 'package:taskflow/features/tasks/data/datasources/in_memory_task_datasource.dart';
+import 'package:taskflow/features/tasks/data/providers/tasks_providers.dart';
 import 'package:taskflow/main.dart';
 
 void main() {
   testWidgets('App smoke test — renders wrapped in ProviderScope', (tester) async {
+    final localAuth = LocalAuthDatasource();
+    addTearDown(localAuth.dispose);
+
     await tester.pumpWidget(
-      const ProviderScope(child: TaskFlowApp()),
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(localAuth),
+          taskRepositoryProvider.overrideWithValue(InMemoryTaskDatasource()),
+        ],
+        child: const TaskFlowApp(),
+      ),
     );
     await tester.pumpAndSettle();
     expect(find.byType(MaterialApp), findsOneWidget);

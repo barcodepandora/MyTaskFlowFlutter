@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:taskflow/features/tasks/domain/entities/task_entity.dart';
 import 'package:taskflow/features/tasks/domain/entities/task_priority.dart';
 
@@ -40,6 +41,35 @@ class TaskModel extends Task {
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
     );
+  }
+
+  factory TaskModel.fromFirestore(Map<String, dynamic> data, String id) {
+    return TaskModel(
+      id: id,
+      title: data['title'] as String,
+      description: data['description'] as String? ?? '',
+      dueDate: (data['dueDate'] as Timestamp).toDate(),
+      category: data['category'] as String? ?? 'Personal',
+      priority:
+          TaskPriority.values.byName(data['priority'] as String? ?? 'medium'),
+      isCompleted: data['isCompleted'] as bool? ?? false,
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+    );
+  }
+
+  Map<String, dynamic> toFirestore(String userId) {
+    return {
+      'userId': userId,
+      'title': title,
+      'description': description,
+      'dueDate': Timestamp.fromDate(dueDate),
+      'category': category,
+      'priority': priority.name,
+      'isCompleted': isCompleted,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+    };
   }
 
   Map<String, dynamic> toJson() {
