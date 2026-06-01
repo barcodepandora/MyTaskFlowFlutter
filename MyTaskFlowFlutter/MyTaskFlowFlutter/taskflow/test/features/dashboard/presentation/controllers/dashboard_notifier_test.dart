@@ -81,7 +81,7 @@ void main() {
       await notifier.loadDashboard();
 
       expect(notifier.state, isA<DashboardError>());
-      expect((notifier.state as DashboardError).message, 'stats error');
+      expect((notifier.state as DashboardError).message, 'Error de almacenamiento.');
     });
 
     test('emits DashboardError when getActivity fails', () async {

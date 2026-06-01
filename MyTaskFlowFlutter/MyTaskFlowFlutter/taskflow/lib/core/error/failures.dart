@@ -31,3 +31,20 @@ class TaskValidationFailure extends Failure {
 class StorageFailure extends Failure {
   const StorageFailure([super.message = 'Error de almacenamiento']);
 }
+
+class NetworkFailure extends Failure {
+  const NetworkFailure([super.message = 'Sin conexión. Verifica tu red.']);
+}
+
+class UserNotFoundFailure extends Failure {
+  const UserNotFoundFailure([super.message = 'Usuario no encontrado']);
+}
+
+class TimeoutFailure extends Failure {
+  const TimeoutFailure([super.message = 'La solicitud tardó demasiado']);
+}
+
+class UnauthorizedFailure extends Failure {
+  const UnauthorizedFailure(
+      [super.message = 'Sesión expirada. Inicia sesión de nuevo']);
+}

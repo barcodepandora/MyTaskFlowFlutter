@@ -40,8 +40,25 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
           const Center(child: CircularProgressIndicator()),
         DashboardLoaded(:final stats, :final recentTasks) =>
           _Loaded(greeting: greeting, stats: stats, recentTasks: recentTasks),
-        DashboardError(:final message) =>
-          Center(child: Text(message)),
+        DashboardError(:final message) => Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                const SizedBox(height: 12),
+                Text(message, textAlign: TextAlign.center),
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  key: const Key('dashboardRetryBtn'),
+                  onPressed: () => ref
+                      .read(dashboardNotifierProvider.notifier)
+                      .loadDashboard(),
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Reintentar'),
+                ),
+              ],
+            ),
+          ),
         _ => const SizedBox(),
       },
     );

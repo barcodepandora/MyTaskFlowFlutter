@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:taskflow/core/utils/failure_mapper.dart';
 import 'package:taskflow/features/tasks/domain/entities/task_entity.dart';
 import 'package:taskflow/features/tasks/domain/usecases/create_task_usecase.dart';
 import 'package:taskflow/features/tasks/domain/usecases/delete_task_usecase.dart';
@@ -27,7 +28,7 @@ class TasksNotifier extends StateNotifier<TasksState> {
     state = const TasksLoading();
     final result = await _getAllTasks();
     state = result.fold(
-      (failure) => TasksError(failure.message),
+      (failure) => TasksError(mapFailureToMessage(failure)),
       (tasks) => TasksLoaded(tasks),
     );
   }
@@ -36,7 +37,8 @@ class TasksNotifier extends StateNotifier<TasksState> {
     state = const TasksLoading();
     final result = await _createTask(task);
     if (result.isLeft()) {
-      state = TasksError(result.fold((f) => f.message, (_) => ''));
+      state = TasksError(
+          result.fold((f) => mapFailureToMessage(f), (_) => ''));
       return;
     }
     state = const TaskOperationSuccess('Tarea creada');
@@ -47,7 +49,8 @@ class TasksNotifier extends StateNotifier<TasksState> {
     state = const TasksLoading();
     final result = await _updateTask(task);
     if (result.isLeft()) {
-      state = TasksError(result.fold((f) => f.message, (_) => ''));
+      state = TasksError(
+          result.fold((f) => mapFailureToMessage(f), (_) => ''));
       return;
     }
     state = const TaskOperationSuccess('Tarea actualizada');
@@ -58,7 +61,8 @@ class TasksNotifier extends StateNotifier<TasksState> {
     state = const TasksLoading();
     final result = await _deleteTask(id);
     if (result.isLeft()) {
-      state = TasksError(result.fold((f) => f.message, (_) => ''));
+      state = TasksError(
+          result.fold((f) => mapFailureToMessage(f), (_) => ''));
       return;
     }
     state = const TaskOperationSuccess('Tarea eliminada');
