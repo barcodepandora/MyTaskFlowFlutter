@@ -6,6 +6,8 @@ import 'package:taskflow/features/tasks/domain/usecases/delete_task_usecase.dart
 import 'package:taskflow/features/tasks/domain/usecases/get_all_tasks_usecase.dart';
 import 'package:taskflow/features/tasks/domain/usecases/search_tasks_usecase.dart';
 import 'package:taskflow/features/tasks/domain/usecases/update_task_usecase.dart';
+import 'package:taskflow/features/tasks/presentation/controllers/search_notifier.dart';
+import 'package:taskflow/features/tasks/presentation/controllers/search_state.dart';
 import 'package:taskflow/features/tasks/presentation/controllers/tasks_notifier.dart';
 import 'package:taskflow/features/tasks/presentation/controllers/tasks_state.dart';
 
@@ -41,4 +43,15 @@ final tasksNotifierProvider =
     updateTask: ref.watch(updateTaskUseCaseProvider),
     deleteTask: ref.watch(deleteTaskUseCaseProvider),
   ),
+);
+
+final searchNotifierProvider =
+    StateNotifierProvider<SearchNotifier, SearchState>(
+  (ref) {
+    final notifier = SearchNotifier();
+    ref.listen<TasksState>(tasksNotifierProvider, (_, next) {
+      if (next is TasksLoaded) notifier.updateTasks(next.tasks);
+    }, fireImmediately: true);
+    return notifier;
+  },
 );

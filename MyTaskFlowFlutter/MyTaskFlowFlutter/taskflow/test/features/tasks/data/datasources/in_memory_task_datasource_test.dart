@@ -37,7 +37,7 @@ void main() {
       final result = await datasource.getAllTasks();
       result.fold(
         (f) => fail('Expected success'),
-        (tasks) => expect(tasks.length, 3),
+        (tasks) => expect(tasks.length, 6),
       );
     });
   });
