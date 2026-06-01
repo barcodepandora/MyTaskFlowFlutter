@@ -3,7 +3,7 @@ import 'package:taskflow/features/tasks/domain/entities/task_entity.dart';
 import 'package:taskflow/features/tasks/domain/entities/task_priority.dart';
 
 void main() {
-  final fixedDate = DateTime(2026, 6, 1);
+  final fixedDate = DateTime(2027, 1, 1);
   final pastDate = DateTime(2020, 1, 1);
 
   Task buildTask({

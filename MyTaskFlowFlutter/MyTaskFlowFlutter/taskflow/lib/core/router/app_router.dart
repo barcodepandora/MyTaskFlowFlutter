@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:taskflow/features/auth/data/providers/auth_providers.dart';
 import 'package:taskflow/features/auth/presentation/controllers/auth_state.dart';
 import 'package:taskflow/features/auth/presentation/pages/login_page.dart';
+import 'package:taskflow/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:taskflow/features/profile/presentation/pages/profile_placeholder_page.dart';
+import 'package:taskflow/features/shell/presentation/pages/app_shell.dart';
 import 'package:taskflow/features/tasks/domain/entities/task_entity.dart';
 import 'package:taskflow/features/tasks/presentation/pages/task_detail_page.dart';
 import 'package:taskflow/features/tasks/presentation/pages/task_form_page.dart';
@@ -22,7 +25,7 @@ class _RouterNotifier extends ChangeNotifier {
     final isLoginRoute = state.matchedLocation == '/login';
 
     if (!isAuthenticated && !isLoginRoute) return '/login';
-    if (isAuthenticated && isLoginRoute) return '/tasks';
+    if (isAuthenticated && isLoginRoute) return '/home';
     return null;
   }
 }
@@ -42,27 +45,53 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/login',
         builder: (context, state) => const LoginPage(),
       ),
-      GoRoute(
-        path: '/tasks',
-        builder: (context, state) => const TaskListPage(),
-        routes: [
-          GoRoute(
-            path: 'create',
-            builder: (context, state) => const TaskFormPage(),
-          ),
-          GoRoute(
-            path: ':id',
-            builder: (context, state) {
-              final task = state.extra as Task;
-              return TaskDetailPage(task: task);
-            },
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            AppShell(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
             routes: [
               GoRoute(
-                path: 'edit',
-                builder: (context, state) {
-                  final task = state.extra as Task;
-                  return TaskFormPage(task: task);
-                },
+                path: '/home',
+                builder: (context, state) => const DashboardPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/tasks',
+                builder: (context, state) => const TaskListPage(),
+                routes: [
+                  GoRoute(
+                    path: 'create',
+                    builder: (context, state) => const TaskFormPage(),
+                  ),
+                  GoRoute(
+                    path: ':id',
+                    builder: (context, state) {
+                      final task = state.extra as Task;
+                      return TaskDetailPage(task: task);
+                    },
+                    routes: [
+                      GoRoute(
+                        path: 'edit',
+                        builder: (context, state) {
+                          final task = state.extra as Task;
+                          return TaskFormPage(task: task);
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/profile',
+                builder: (context, state) => const ProfilePlaceholderPage(),
               ),
             ],
           ),

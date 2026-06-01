@@ -49,6 +49,39 @@ class InMemoryTaskDatasource implements TaskRepository {
         createdAt: now,
         updatedAt: now,
       ),
+      Task(
+        id: 'seed-4',
+        title: 'Comprar víveres',
+        description: 'Lista del supermercado semanal',
+        dueDate: now.subtract(const Duration(days: 1)),
+        category: 'Personal',
+        priority: TaskPriority.low,
+        isCompleted: false,
+        createdAt: now.subtract(const Duration(days: 2)),
+        updatedAt: now.subtract(const Duration(days: 1)),
+      ),
+      Task(
+        id: 'seed-5',
+        title: 'Llamar al médico',
+        description: 'Agendar revisión anual',
+        dueDate: now.subtract(const Duration(hours: 2)),
+        category: 'Salud',
+        priority: TaskPriority.high,
+        isCompleted: false,
+        createdAt: now.subtract(const Duration(days: 3)),
+        updatedAt: now.subtract(const Duration(hours: 2)),
+      ),
+      Task(
+        id: 'seed-6',
+        title: 'Preparar presentación',
+        description: 'Slides para reunión del lunes',
+        dueDate: now.add(const Duration(days: 2)),
+        category: 'Trabajo',
+        priority: TaskPriority.high,
+        isCompleted: true,
+        createdAt: now.subtract(const Duration(days: 4)),
+        updatedAt: now.subtract(const Duration(hours: 5)),
+      ),
     ];
   }
 
@@ -112,6 +145,10 @@ class InMemoryTaskDatasource implements TaskRepository {
     if (filter.isCompleted != null) {
       result =
           result.where((t) => t.isCompleted == filter.isCompleted).toList();
+    }
+
+    if (filter.isOverdue == true) {
+      result = result.where((t) => t.isOverdue).toList();
     }
 
     return Right(result);
