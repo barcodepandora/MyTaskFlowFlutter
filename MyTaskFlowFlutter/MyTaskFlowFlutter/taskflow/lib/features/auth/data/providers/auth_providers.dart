@@ -1,5 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:taskflow/features/auth/data/datasources/local_auth_datasource.dart';
+import 'package:taskflow/features/auth/data/datasources/remote_auth_datasource.dart';
 import 'package:taskflow/features/auth/domain/repositories/auth_repository.dart';
 import 'package:taskflow/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:taskflow/features/auth/domain/usecases/sign_out_usecase.dart';
@@ -7,9 +8,7 @@ import 'package:taskflow/features/auth/presentation/controllers/auth_notifier.da
 import 'package:taskflow/features/auth/presentation/controllers/auth_state.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  final datasource = LocalAuthDatasource();
-  ref.onDispose(datasource.dispose);
-  return datasource;
+  return RemoteAuthDatasource(fb.FirebaseAuth.instance);
 });
 
 final signInUseCaseProvider = Provider<SignInUseCase>((ref) {

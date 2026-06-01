@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:taskflow/features/tasks/data/datasources/in_memory_task_datasource.dart';
+import 'package:taskflow/features/tasks/data/datasources/firebase_task_datasource.dart';
 import 'package:taskflow/features/tasks/domain/repositories/task_repository.dart';
 import 'package:taskflow/features/tasks/domain/usecases/create_task_usecase.dart';
 import 'package:taskflow/features/tasks/domain/usecases/delete_task_usecase.dart';
@@ -11,9 +13,12 @@ import 'package:taskflow/features/tasks/presentation/controllers/search_state.da
 import 'package:taskflow/features/tasks/presentation/controllers/tasks_notifier.dart';
 import 'package:taskflow/features/tasks/presentation/controllers/tasks_state.dart';
 
-final taskRepositoryProvider = Provider<TaskRepository>(
-  (_) => InMemoryTaskDatasource(),
-);
+final taskRepositoryProvider = Provider<TaskRepository>((ref) {
+  return FirebaseTaskDatasource(
+    firestore: FirebaseFirestore.instance,
+    auth: fb.FirebaseAuth.instance,
+  );
+});
 
 final getAllTasksUseCaseProvider = Provider<GetAllTasksUseCase>(
   (ref) => GetAllTasksUseCase(ref.watch(taskRepositoryProvider)),

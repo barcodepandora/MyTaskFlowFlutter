@@ -1,10 +1,25 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:taskflow/features/auth/data/datasources/local_auth_datasource.dart';
+import 'package:taskflow/features/auth/data/providers/auth_providers.dart';
+import 'package:taskflow/features/tasks/data/datasources/in_memory_task_datasource.dart';
+import 'package:taskflow/features/tasks/data/providers/tasks_providers.dart';
 import 'package:taskflow/main.dart';
 
 void main() {
   testWidgets('TaskFlowApp renders without errors', (WidgetTester tester) async {
-    await tester.pumpWidget(const ProviderScope(child: TaskFlowApp()));
+    final localAuth = LocalAuthDatasource();
+    addTearDown(localAuth.dispose);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(localAuth),
+          taskRepositoryProvider.overrideWithValue(InMemoryTaskDatasource()),
+        ],
+        child: const TaskFlowApp(),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.byType(TaskFlowApp), findsOneWidget);
   });
