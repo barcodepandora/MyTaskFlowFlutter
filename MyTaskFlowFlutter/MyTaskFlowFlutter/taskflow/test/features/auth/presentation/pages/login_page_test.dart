@@ -88,7 +88,10 @@ Widget _buildTestWidget({
     overrides: [
       authNotifierProvider.overrideWith((_) => notifierFactory()),
     ],
-    child: MaterialApp.router(routerConfig: router),
+    child: MaterialApp.router(
+      theme: ThemeData(splashFactory: NoSplash.splashFactory),
+      routerConfig: router,
+    ),
   );
 }
 

@@ -8,6 +8,7 @@ void main() {
     required VoidCallback onClear,
   }) {
     return MaterialApp(
+      theme: ThemeData(splashFactory: NoSplash.splashFactory),
       home: Scaffold(
         body: TaskSearchBar(onChanged: onChanged, onClear: onClear),
       ),

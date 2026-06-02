@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:taskflow/features/auth/domain/entities/auth_user.dart';
 import 'package:taskflow/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:taskflow/features/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:taskflow/features/auth/presentation/controllers/auth_state.dart';
@@ -28,5 +29,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> signOut() async {
     await _signOutUseCase();
     state = const AuthUnauthenticated();
+  }
+
+  void updateUser(AuthUser user) {
+    state = AuthAuthenticated(user);
   }
 }

@@ -10,6 +10,7 @@ void main() {
     required ValueChanged<TaskFilter> onFilterChanged,
   }) {
     return MaterialApp(
+      theme: ThemeData(splashFactory: NoSplash.splashFactory),
       home: Scaffold(
         body: FilterChips(
           activeFilter: activeFilter,
