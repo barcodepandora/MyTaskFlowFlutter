@@ -30,6 +30,7 @@ Widget _wrap(MockTaskRepository repo, {Task? task}) {
   return ProviderScope(
     overrides: [taskRepositoryProvider.overrideWithValue(repo)],
     child: MaterialApp.router(
+      theme: ThemeData(splashFactory: NoSplash.splashFactory),
       routerConfig: GoRouter(
         initialLocation: isEdit ? '/tasks/edit-id/edit' : '/tasks/create',
         routes: [

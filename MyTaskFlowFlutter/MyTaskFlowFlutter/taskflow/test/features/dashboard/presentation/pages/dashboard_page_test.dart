@@ -115,6 +115,7 @@ Widget _wrap(DashboardState initialState) {
       authNotifierProvider.overrideWith((ref) => _FakeAuthNotifier()),
     ],
     child: MaterialApp.router(
+      theme: ThemeData(splashFactory: NoSplash.splashFactory),
       routerConfig: GoRouter(
         routes: [
           GoRoute(path: '/', builder: (_, _) => const DashboardPage()),

@@ -5,7 +5,7 @@ import 'package:taskflow/features/auth/data/providers/auth_providers.dart';
 import 'package:taskflow/features/auth/presentation/controllers/auth_state.dart';
 import 'package:taskflow/features/auth/presentation/pages/login_page.dart';
 import 'package:taskflow/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:taskflow/features/profile/presentation/pages/profile_placeholder_page.dart';
+import 'package:taskflow/features/profile/presentation/pages/profile_page.dart';
 import 'package:taskflow/features/shell/presentation/pages/app_shell.dart';
 import 'package:taskflow/features/tasks/domain/entities/task_entity.dart';
 import 'package:taskflow/features/tasks/presentation/pages/task_detail_page.dart';
@@ -91,7 +91,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/profile',
-                builder: (context, state) => const ProfilePlaceholderPage(),
+                builder: (context, state) => const ProfilePage(),
               ),
             ],
           ),
