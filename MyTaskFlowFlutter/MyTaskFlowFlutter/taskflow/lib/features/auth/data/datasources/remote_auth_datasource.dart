@@ -1,13 +1,15 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:taskflow/core/error/failures.dart';
+import 'package:taskflow/core/network/network_info.dart';
 import 'package:taskflow/features/auth/domain/entities/auth_user.dart';
 import 'package:taskflow/features/auth/domain/repositories/auth_repository.dart';
 
 class RemoteAuthDatasource implements AuthRepository {
-  RemoteAuthDatasource(this._firebaseAuth);
+  RemoteAuthDatasource(this._firebaseAuth, this._networkInfo);
 
   final fb.FirebaseAuth _firebaseAuth;
+  final NetworkInfo _networkInfo;
 
   @override
   Stream<AuthUser> get authStateChanges {
@@ -27,6 +29,7 @@ class RemoteAuthDatasource implements AuthRepository {
     String email,
     String password,
   ) async {
+    if (!await _networkInfo.isConnected) return const Left(NetworkFailure());
     try {
       final credential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
@@ -40,6 +43,8 @@ class RemoteAuthDatasource implements AuthRepository {
       ));
     } on fb.FirebaseAuthException catch (e) {
       return Left(_mapAuthException(e));
+    } catch (_) {
+      return const Left(ServerFailure('Error inesperado al iniciar sesión.'));
     }
   }
 
@@ -55,9 +60,16 @@ class RemoteAuthDatasource implements AuthRepository {
 
   Failure _mapAuthException(fb.FirebaseAuthException e) {
     return switch (e.code) {
-      'user-not-found' => const UserNotFoundFailure(),
-      'wrong-password' || 'invalid-credential' =>
+      'user-not-found' || 'email-not-found' => const UserNotFoundFailure(),
+      'wrong-password' ||
+      'invalid-credential' ||
+      'INVALID_LOGIN_CREDENTIALS' ||
+      'invalid-login-credentials' =>
         const InvalidCredentialsFailure(),
+      'operation-not-allowed' =>
+        const ServerFailure('Método de acceso no habilitado en Firebase.'),
+      'user-disabled' =>
+        const ServerFailure('Esta cuenta ha sido deshabilitada.'),
       'network-request-failed' => const NetworkFailure(),
       'too-many-requests' =>
         const ServerFailure('Demasiados intentos. Intenta más tarde.'),

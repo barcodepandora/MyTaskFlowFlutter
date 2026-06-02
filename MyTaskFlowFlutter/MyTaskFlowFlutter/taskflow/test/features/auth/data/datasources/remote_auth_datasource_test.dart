@@ -18,7 +18,7 @@ void main() {
     mockAuth = MockFirebaseAuth();
     mockCredential = MockUserCredential();
     mockUser = MockFirebaseUser();
-    datasource = RemoteAuthDatasource(mockAuth);
+    datasource = RemoteAuthDatasource(mockAuth, FakeNetworkInfo(connected: true));
   });
 
   group('signInWithEmailAndPassword', () {
@@ -159,6 +159,29 @@ void main() {
       expect(users.length, 1);
       expect(users.first, AuthUser.empty());
       expect(users.first.isAuthenticated, isFalse);
+    });
+  });
+
+  group('network failure', () {
+    late RemoteAuthDatasource offlineDatasource;
+
+    setUp(() {
+      offlineDatasource =
+          RemoteAuthDatasource(mockAuth, FakeNetworkInfo(connected: false));
+    });
+
+    test('signIn returns NetworkFailure when offline without calling Firebase',
+        () async {
+      final result = await offlineDatasource.signInWithEmailAndPassword(
+        'test@taskflow.com',
+        'Test1234!',
+      );
+
+      expect(result, const Left(NetworkFailure()));
+      verifyNever(() => mockAuth.signInWithEmailAndPassword(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ));
     });
   });
 }

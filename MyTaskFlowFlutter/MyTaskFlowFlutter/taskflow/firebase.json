@@ -1,1 +1,43 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"taskflow-d054c","appId":"1:17369690319:android:f4f91f9c60e7aa021a47ba","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"taskflow-d054c","appId":"1:17369690319:ios:e6d908e7cf049bb41a47ba","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"macos":{"default":{"projectId":"taskflow-d054c","appId":"1:17369690319:ios:e6d908e7cf049bb41a47ba","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"taskflow-d054c","configurations":{"android":"1:17369690319:android:f4f91f9c60e7aa021a47ba","ios":"1:17369690319:ios:e6d908e7cf049bb41a47ba","macos":"1:17369690319:ios:e6d908e7cf049bb41a47ba","web":"1:17369690319:web:f76aaa41419c010e1a47ba"}}}}}}
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "taskflow-d054c",
+          "appId": "1:17369690319:android:f4f91f9c60e7aa021a47ba",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "taskflow-d054c",
+          "appId": "1:17369690319:ios:e6d908e7cf049bb41a47ba",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "taskflow-d054c",
+          "appId": "1:17369690319:ios:e6d908e7cf049bb41a47ba",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "taskflow-d054c",
+          "configurations": {
+            "android": "1:17369690319:android:f4f91f9c60e7aa021a47ba",
+            "ios": "1:17369690319:ios:e6d908e7cf049bb41a47ba",
+            "macos": "1:17369690319:ios:e6d908e7cf049bb41a47ba",
+            "web": "1:17369690319:web:f76aaa41419c010e1a47ba"
+          }
+        }
+      }
+    }
+  }
+}

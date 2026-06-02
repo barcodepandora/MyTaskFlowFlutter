@@ -6,6 +6,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:taskflow/core/error/failures.dart';
 import 'package:taskflow/features/tasks/data/datasources/firebase_task_datasource.dart';
 import 'package:taskflow/features/tasks/domain/entities/task_filter.dart';
+import 'package:taskflow/features/tasks/domain/entities/task_priority.dart';
 
 import '../../../../helpers/firebase_mocks.dart';
 
@@ -28,6 +29,7 @@ void main() {
     datasource = FirebaseTaskDatasource(
       firestore: fakeFirestore,
       auth: mockAuth,
+      networkInfo: FakeNetworkInfo(connected: true),
     );
   });
 
@@ -167,14 +169,17 @@ void main() {
   group('searchTasks', () {
     setUp(() async {
       await datasource.createTask(makeTask(id: 't1', title: 'Comprar leche'));
-      await datasource
-          .createTask(makeTask(id: 't2', title: 'Estudiar Flutter', isCompleted: true));
-      await datasource.createTask(makeTask(id: 't3', title: 'Llamar médico'));
+      await datasource.createTask(makeTask(
+          id: 't2',
+          title: 'Estudiar Flutter',
+          isCompleted: true,
+          priority: TaskPriority.high));
+      await datasource.createTask(makeTask(
+          id: 't3', title: 'Llamar médico', category: 'Salud'));
     });
 
     test('returns all tasks with empty filter', () async {
-      final result =
-          await datasource.searchTasks(const TaskFilter());
+      final result = await datasource.searchTasks(const TaskFilter());
 
       result.fold((_) => fail('Expected Right'), (tasks) {
         expect(tasks.length, 3);
@@ -201,7 +206,7 @@ void main() {
       });
     });
 
-    test('filters by isCompleted true', () async {
+    test('filters by isCompleted true — server-side query', () async {
       final result =
           await datasource.searchTasks(const TaskFilter(isCompleted: true));
 
@@ -211,7 +216,7 @@ void main() {
       });
     });
 
-    test('filters by isCompleted false', () async {
+    test('filters by isCompleted false — server-side query', () async {
       final result =
           await datasource.searchTasks(const TaskFilter(isCompleted: false));
 
@@ -219,6 +224,79 @@ void main() {
         expect(tasks.every((t) => !t.isCompleted), isTrue);
         expect(tasks.length, 2);
       });
+    });
+
+    test('filters by priority — server-side query', () async {
+      final result = await datasource
+          .searchTasks(const TaskFilter(priority: TaskPriority.high));
+
+      result.fold((_) => fail('Expected Right'), (tasks) {
+        expect(tasks.length, 1);
+        expect(tasks.first.id, 't2');
+      });
+    });
+
+    test('filters by category — server-side query', () async {
+      final result =
+          await datasource.searchTasks(const TaskFilter(category: 'Salud'));
+
+      result.fold((_) => fail('Expected Right'), (tasks) {
+        expect(tasks.length, 1);
+        expect(tasks.first.id, 't3');
+      });
+    });
+
+    test('combines server-side and in-memory filters', () async {
+      final result = await datasource.searchTasks(
+          const TaskFilter(isCompleted: false, keyword: 'médico'));
+
+      result.fold((_) => fail('Expected Right'), (tasks) {
+        expect(tasks.length, 1);
+        expect(tasks.first.id, 't3');
+      });
+    });
+  });
+
+  group('network failure', () {
+    late FirebaseTaskDatasource offlineDatasource;
+
+    setUp(() {
+      offlineDatasource = FirebaseTaskDatasource(
+        firestore: fakeFirestore,
+        auth: mockAuth,
+        networkInfo: FakeNetworkInfo(connected: false),
+      );
+    });
+
+    test('getAllTasks returns NetworkFailure when offline', () async {
+      final result = await offlineDatasource.getAllTasks();
+      expect(result, const Left(NetworkFailure()));
+    });
+
+    test('createTask returns NetworkFailure when offline', () async {
+      final result = await offlineDatasource.createTask(makeTask());
+      expect(result, const Left(NetworkFailure()));
+    });
+
+    test('updateTask returns NetworkFailure when offline', () async {
+      final result = await offlineDatasource.updateTask(makeTask());
+      expect(result, const Left(NetworkFailure()));
+    });
+
+    test('deleteTask returns NetworkFailure when offline', () async {
+      final result = await offlineDatasource.deleteTask('any-id');
+      expect(result, const Left(NetworkFailure()));
+    });
+
+    test('getTaskById returns NetworkFailure when offline', () async {
+      final result = await offlineDatasource.getTaskById('any-id');
+      expect(result, const Left(NetworkFailure()));
+    });
+
+    test('searchTasks returns NetworkFailure when offline', () async {
+      final result =
+          await offlineDatasource.searchTasks(const TaskFilter());
+      expect(result, const Left(NetworkFailure()));
     });
   });
 }
