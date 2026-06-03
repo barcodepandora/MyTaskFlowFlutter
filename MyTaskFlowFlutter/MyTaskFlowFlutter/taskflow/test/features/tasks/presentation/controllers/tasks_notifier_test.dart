@@ -74,10 +74,12 @@ void main() {
   });
 
   group('createTask', () {
-    test('emits TaskOperationSuccess then reloads on success', () async {
+    test('emits TaskOperationSuccess then silently reloads on success', () async {
       when(() => createTask(any())).thenAnswer((_) async => Right(sampleTask));
       when(() => getAllTasks()).thenAnswer((_) async => Right([sampleTask]));
       await notifier.createTask(sampleTask);
+      expect(notifier.state, isA<TaskOperationSuccess>());
+      await Future<void>.delayed(Duration.zero); // allow _silentRefresh to complete
       expect(notifier.state, isA<TasksLoaded>());
     });
 
@@ -90,10 +92,12 @@ void main() {
   });
 
   group('deleteTask', () {
-    test('emits TaskOperationSuccess then reloads on success', () async {
+    test('emits TaskOperationSuccess then silently reloads on success', () async {
       when(() => deleteTask(any())).thenAnswer((_) async => const Right(null));
       when(() => getAllTasks()).thenAnswer((_) async => const Right([]));
       await notifier.deleteTask('task-1');
+      expect(notifier.state, isA<TaskOperationSuccess>());
+      await Future<void>.delayed(Duration.zero); // allow _silentRefresh to complete
       expect(notifier.state, isA<TasksLoaded>());
     });
   });

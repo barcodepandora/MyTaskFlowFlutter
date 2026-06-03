@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:taskflow/core/utils/failure_mapper.dart';
 import 'package:taskflow/features/tasks/domain/entities/task_entity.dart';
@@ -42,7 +44,7 @@ class TasksNotifier extends StateNotifier<TasksState> {
       return;
     }
     state = const TaskOperationSuccess('Tarea creada');
-    await loadTasks();
+    unawaited(_silentRefresh());
   }
 
   Future<void> updateTask(Task task) async {
@@ -54,7 +56,7 @@ class TasksNotifier extends StateNotifier<TasksState> {
       return;
     }
     state = const TaskOperationSuccess('Tarea actualizada');
-    await loadTasks();
+    unawaited(_silentRefresh());
   }
 
   Future<void> deleteTask(String id) async {
@@ -66,7 +68,17 @@ class TasksNotifier extends StateNotifier<TasksState> {
       return;
     }
     state = const TaskOperationSuccess('Tarea eliminada');
-    await loadTasks();
+    unawaited(_silentRefresh());
+  }
+
+  // Refresca la lista sin emitir TasksLoading, evitando que el estado
+  // vuelva a Loading antes de que ref.listen procese TaskOperationSuccess.
+  Future<void> _silentRefresh() async {
+    final result = await _getAllTasks();
+    state = result.fold(
+      (failure) => TasksError(mapFailureToMessage(failure)),
+      (tasks) => TasksLoaded(tasks),
+    );
   }
 
   Future<void> toggleComplete(Task task) async {
