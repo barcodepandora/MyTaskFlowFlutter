@@ -22,27 +22,31 @@ class StatsCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (icon != null) Icon(icon, color: color, size: 20),
-            if (icon != null) const SizedBox(height: 4),
-            Text(
-              value,
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineSmall
-                  ?.copyWith(color: color, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              label,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: color),
-            ),
-          ],
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (icon != null) Icon(icon, color: color, size: 20),
+              if (icon != null) const SizedBox(height: 4),
+              Text(
+                value,
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(color: color, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                label,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: color),
+              ),
+            ],
+          ),
         ),
       ),
     );
