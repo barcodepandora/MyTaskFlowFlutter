@@ -48,38 +48,40 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('TaskFlow')),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                key: const Key('emailField'),
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: emailValidator,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                key: const Key('passwordField'),
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: 'Contraseña'),
-                validator: passwordValidator,
-              ),
-              const SizedBox(height: 24),
-              if (authState is AuthLoading)
-                const CircularProgressIndicator()
-              else
-                ElevatedButton(
-                  key: const Key('loginButton'),
-                  onPressed: _submit,
-                  child: const Text('Iniciar Sesión'),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFormField(
+                  key: const Key('emailField'),
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                  validator: emailValidator,
                 ),
-            ],
+                const SizedBox(height: 16),
+                TextFormField(
+                  key: const Key('passwordField'),
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(labelText: 'Contraseña'),
+                  validator: passwordValidator,
+                ),
+                const SizedBox(height: 24),
+                if (authState is AuthLoading)
+                  const CircularProgressIndicator()
+                else
+                  ElevatedButton(
+                    key: const Key('loginButton'),
+                    onPressed: _submit,
+                    child: const Text('Iniciar Sesión'),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

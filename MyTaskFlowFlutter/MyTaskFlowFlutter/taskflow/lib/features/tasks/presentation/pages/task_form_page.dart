@@ -57,7 +57,7 @@ class _TaskFormPageState extends ConsumerState<TaskFormPage> {
     if (picked != null) setState(() => _dueDate = picked);
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_dueDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -77,7 +77,7 @@ class _TaskFormPageState extends ConsumerState<TaskFormPage> {
         priority: _priority,
         updatedAt: DateTime.now(),
       );
-      notifier.updateTask(updated);
+      await notifier.updateTask(updated);
     } else {
       final task = Task.create(
         title: _titleCtrl.text.trim(),
@@ -86,14 +86,25 @@ class _TaskFormPageState extends ConsumerState<TaskFormPage> {
         category: _category,
         priority: _priority,
       );
-      notifier.createTask(task);
+      await notifier.createTask(task);
     }
-
-    context.pop();
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<TasksState>(tasksNotifierProvider, (_, next) {
+      if (next is TaskOperationSuccess && mounted) {
+        context.pop();
+      } else if (next is TasksError && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.message),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    });
+
     final tasksState = ref.watch(tasksNotifierProvider);
     final isLoading = tasksState is TasksLoading;
 
@@ -182,7 +193,7 @@ class _TaskFormPageState extends ConsumerState<TaskFormPage> {
               const SizedBox(height: 24),
               ElevatedButton(
                 key: const Key('saveButton'),
-                onPressed: _submit,
+                onPressed: isLoading ? null : _submit,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
