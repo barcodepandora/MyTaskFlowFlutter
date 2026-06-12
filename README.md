@@ -84,6 +84,9 @@ dart run build_runner build --delete-conflicting-outputs
 ## Running the app
 
 ```bash
+# User
+test@taskflow.com Test1234!
+
 # List available devices
 flutter devices
 
@@ -92,6 +95,15 @@ flutter run -d <device-id>
 ```
 
 Common targets: `ios`, `android`, `chrome`.
+
+<img width="379" height="790" alt="Screenshot 2026-06-12 at 2 39 19 PM" src="https://github.com/user-attachments/assets/080f492d-bc7f-4368-b7a8-beece92bc153" />
+<img width="379" height="776" alt="Screenshot 2026-06-12 at 2 40 33 PM" src="https://github.com/user-attachments/assets/29286c5f-ad69-41b5-a924-107ba1ae08a4" />
+<img width="385" height="797" alt="Screenshot 2026-06-12 at 2 41 07 PM" src="https://github.com/user-attachments/assets/17f29c85-1b38-4f5a-b43e-0c217e592478" />
+<img width="391" height="794" alt="Screenshot 2026-06-12 at 2 42 11 PM" src="https://github.com/user-attachments/assets/32e3440f-c058-42ee-971b-26f59cbc11f8" />
+<img width="385" height="789" alt="Screenshot 2026-06-12 at 2 42 32 PM" src="https://github.com/user-attachments/assets/1a2273ae-4176-49bd-9fdb-fabfacef36f0" />
+<img width="385" height="789" alt="Screenshot 2026-06-12 at 2 42 45 PM" src="https://github.com/user-attachments/assets/47b49905-90e7-44f9-a2e6-47b4ff9ee8ad" />
+<img width="388" height="782" alt="Screenshot 2026-06-12 at 2 43 46 PM" src="https://github.com/user-attachments/assets/8b7539d6-9d24-471c-a391-b33c8f9a6291" />
+<img width="386" height="786" alt="Screenshot 2026-06-12 at 2 48 37 PM" src="https://github.com/user-attachments/assets/84f31444-5f28-4687-999c-310adac7e472" />
 
 ---
 
